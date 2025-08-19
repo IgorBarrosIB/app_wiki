@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rota de Desenvolvimento Profissional - Igor Barros</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .phase {
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .phase-marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .phase-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .phase:nth-child(even) .phase-content {
+            direction: rtl;
+        }
+
+        .phase:nth-child(even) .phase-content > * {
+            direction: ltr;
+        }
+
+        .phase-info {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .phase-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .phase-duration {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .objectives {
+            margin: 20px 0;
+        }
+
+        .objectives h4 {
+            color: #374151;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .objective-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: linear-gradient(135deg, #f8f9ff, #e8f0ff);
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .objective-item i {
+            color: #667eea;
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .course-category {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .course-category:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .category-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .course-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .course-item {
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #374151;
+            border-left: 3px solid #10b981;
+        }
+
+        .priority {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .priority.high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority.medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .priority.low {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .investment-summary {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 2px solid #0284c7;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+
+        .investment-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #0369a1;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .investment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .investment-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 4px solid #0284c7;
+        }
+
+        .investment-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #0369a1;
+            margin-bottom: 5px;
+        }
+
+        .investment-label {
+            color: #64748b;
+            font-size: 0.9em;
+        }
+
+        .career-path {
+            background: linear-gradient(135deg, #fef3c7, #fed7aa);
+            border: 2px solid #f59e0b;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+
+        .career-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .path-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .path-timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #f59e0b, #d97706);
+            border-radius: 2px;
+            z-index: 1;
+        }
+
+        .path-step {
+            background: white;
+            border: 3px solid #f59e0b;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            font-size: 0.8em;
+            text-align: center;
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .phase-marker {
+                left: 20px;
+            }
+
+            .phase-content {
+                grid-template-columns: 1fr;
+                margin-left: 60px;
+            }
+
+            .phase:nth-child(even) .phase-content {
+                direction: ltr;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .path-timeline {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .path-timeline::before {
+                width: 4px;
+                height: 100%;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-route"></i> Rota de Desenvolvimento Profissional</h1>
+            <p>Plano estratégico para evolução de Tech Lead para CTO/Diretor de Tecnologia</p>
+        </div>
+
+        <div class="career-path">
+            <h3 class="career-title">🎯 Evolução de Carreira Planejada</h3>
+            <div class="path-timeline">
+                <div class="path-step">
+                    <div>ATUAL</div>
+                    <div>Tech Lead</div>
+                </div>
+                <div class="path-step">
+                    <div>2025</div>
+                    <div>Senior Lead</div>
+                </div>
+                <div class="path-step">
+                    <div>2026</div>
+                    <div>Arquiteto</div>
+                </div>
+                <div class="path-step">
+                    <div>2027</div>
+                    <div>CTO/Dir.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <!-- FASE 1: IMEDIATA (0-6 meses) -->
+            <div class="phase">
+                <div class="phase-marker">1</div>
+                <div class="phase-content">
+                    <div class="phase-info">
+                        <h3 class="phase-title">
+                            <i class="fas fa-rocket"></i>
+                            FASE 1: Consolidação Mobile & Cloud
+                        </h3>
+                        <div class="phase-duration">⏰ 0-6 meses</div>
+                        
+                        <div class="objectives">
+                            <h4>🎯 Objetivos Estratégicos:</h4>
+                            <div class="objective-list">
+                                <div class="objective-item">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>Finalizar especialização mobile com projeto real</span>
+                                </div>
+                                <div class="objective-item">
+                                    <i class="fas fa-cloud"></i>
+                                    <span>Conquistar primeira certificação cloud</span>
+                                </div>
+                                <div class="objective-item">
+                                    <i class="fas fa-users"></i>
+                                    <span>Fortalecer competências de liderança</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="courses-grid">
+                        <div class="course-category">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <div class="category-title">Mobile Development</div>
+                            </div>
+                            <div class="course-list">
+                                <div class="course-item">
+                                    React Native: Do Zero ao App Store <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    Flutter & Dart: Desenvolvimento Multiplataforma <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    Projeto Prático: App ICMBio Mobile <span class="priority high">ALTA</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-category">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <i class="fas fa-aws"></i>
+                                </div>
+                                <div class="category-title">Cloud Computing</div>
+                            </div>
+                            <div class="course-list">
+                                <div class="course-item">
+                                    AWS Solutions Architect Associate <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    Docker & Kubernetes na Prática <span class="priority medium">MÉDIA</span>
+                                </div>
+                                <div class="course-item">
+                                    Terraform para Infraestrutura <span class="priority medium">MÉDIA</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-category">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <i class="fas fa-users-cog"></i>
+                                </div>
+                                <div class="category-title">Liderança</div>
+                            </div>
+                            <div class="course-list">
+                                <div class="course-item">
+                                    Certified ScrumMaster (CSM) <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    Liderança de Equipes de Alto Performance <span class="priority medium">MÉDIA</span>
+                                </div>
+                                <div class="course-item">
+                                    Management 3.0 Foundation <span class="priority medium">MÉDIA</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FASE 2: PÓS-GRADUAÇÃO (6-18 meses) -->
+            <div class="phase">
+                <div class="phase-marker">2</div>
+                <div class="phase-content">
+                    <div class="courses-grid">
+                        <div class="course-category">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div class="category-title">Pós-Graduação</div>
+                            </div>
+                            <div class="course-list">
+                                <div class="course-item">
+                                    MBA em Gestão de TI (FIAP/FGV) <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    Especialização em Arquitetura de Software <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    Pós em Ciência de Dados Ambientais <span class="priority medium">MÉDIA</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-category">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <div class="category-title">IA & Machine Learning</div>
+                            </div>
+                            <div class="course-list">
+                                <div class="course-item">
+                                    Machine Learning para Conservação <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    Deep Learning com TensorFlow <span class="priority medium">MÉDIA</span>
+                                </div>
+                                <div class="course-item">
+                                    Computer Vision para Monitoramento <span class="priority medium">MÉDIA</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-category">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                                <div class="category-title">Arquitetura</div>
+                            </div>
+                            <div class="course-list">
+                                <div class="course-item">
+                                    Solution Architecture Patterns <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    Microservices & Event-Driven Architecture <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    TOGAF 9 Foundation <span class="priority medium">MÉDIA</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="phase-info">
+                        <h3 class="phase-title">
+                            <i class="fas fa-graduation-cap"></i>
+                            FASE 2: Especialização Acadêmica & Técnica
+                        </h3>
+                        <div class="phase-duration">⏰ 6-18 meses</div>
+                        
+                        <div class="objectives">
+                            <h4>🎯 Objetivos Estratégicos:</h4>
+                            <div class="objective-list">
+                                <div class="objective-item">
+                                    <i class="fas fa-certificate"></i>
+                                    <span>Obter MBA ou Especialização</span>
+                                </div>
+                                <div class="objective-item">
+                                    <i class="fas fa-brain"></i>
+                                    <span>Dominar IA aplicada à conservação</span>
+                                </div>
+                                <div class="objective-item">
+                                    <i class="fas fa-building"></i>
+                                    <span>Tornar-se referência em arquitetura</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FASE 3: CERTIFICAÇÕES AVANÇADAS (12-24 meses) -->
+            <div class="phase">
+                <div class="phase-marker">3</div>
+                <div class="phase-content">
+                    <div class="phase-info">
+                        <h3 class="phase-title">
+                            <i class="fas fa-award"></i>
+                            FASE 3: Certificações Executivas
+                        </h3>
+                        <div class="phase-duration">⏰ 12-24 meses</div>
+                        
+                        <div class="objectives">
+                            <h4>🎯 Objetivos Estratégicos:</h4>
+                            <div class="objective-list">
+                                <div class="objective-item">
+                                    <i class="fas fa-cloud"></i>
+                                    <span>Certificações cloud avançadas</span>
+                                </div>
+                                <div class="objective-item">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Especialização em segurança</span>
+                                </div>
+                                <div class="objective-item">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>Competências executivas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="courses-grid">
+                        <div class="course-category">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <i class="fas fa-cloud"></i>
+                                </div>
+                                <div class="category-title">Cloud Expert</div>
+                            </div>
+                            <div class="course-list">
+                                <div class="course-item">
+                                    AWS Solutions Architect Professional <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    Azure Solutions Architect Expert <span class="priority medium">MÉDIA</span>
+                                </div>
+                                <div class="course-item">
+                                    Google Cloud Architect <span class="priority low">BAIXA</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-category">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="category-title">Segurança</div>
+                            </div>
+                            <div class="course-list">
+                                <div class="course-item">
+                                    CISSP - Security Professional <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    DevSecOps Foundation <span class="priority medium">MÉDIA</span>
+                                </div>
+                                <div class="course-item">
+                                    ISO 27001 Lead Implementer <span class="priority medium">MÉDIA</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-category">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div class="category-title">Gestão Executiva</div>
+                            </div>
+                            <div class="course-list">
+                                <div class="course-item">
+                                    PMP - Project Management <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    COBIT 2019 Foundation <span class="priority medium">MÉDIA</span>
+                                </div>
+                                <div class="course-item">
+                                    ITIL 4 Managing Professional <span class="priority medium">MÉDIA</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FASE 4: MESTRADO & LIDERANÇA EXECUTIVA (18-36 meses) -->
+            <div class="phase">
+                <div class="phase-marker">4</div>
+                <div class="phase-content">
+                    <div class="courses-grid">
+                        <div class="course-category">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div class="category-title">Mestrado</div>
+                            </div>
+                            <div class="course-list">
+                                <div class="course-item">
+                                    Mestrado em Computação Aplicada (UnB) <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    Mestrado em Gestão Ambiental <span class="priority medium">MÉDIA</span>
+                                </div>
+                                <div class="course-item">
+                                    MBA Executivo Internacional <span class="priority medium">MÉDIA</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-category">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <div class="category-title">Liderança Global</div>
+                            </div>
+                            <div class="course-list">
+                                <div class="course-item">
+                                    Executive Leadership Program <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    Digital Transformation Leadership <span class="priority high">ALTA</span>
+                                </div>
+                                <div class="course-item">
+                                    Sustainable Technology Management <span class="priority medium">MÉDIA</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-category">
+                            <div class="category-header">
+                                <div class="category-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div class="category-title">Inovação</div>
+                            </div>
+                            <div class="course-list">
+                                <div class="course-item">
+                                    Design Thinking for Innovation <span class="priority medium">MÉDIA</span>
+                                </div>
+                                <div class="course-item">
+                                    Blockchain para Sustentabilidade <span class="priority low">BAIXA</span>
+                                </div>
+                                <div class="course-item">
+                                    IoT para Monitoramento Ambiental <span class="priority medium">MÉDIA</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="phase-info">
+                        <h3 class="phase-title">
+                            <i class="fas fa-crown"></i>
+                            FASE 4: Mestrado & Liderança Executiva
+                        </h3>
+                        <div class="phase-duration">⏰ 18-36 meses</div>
+                        
+                        <div class="objectives">
+                            <h4>🎯 Objetivos Estratégicos:</h4>
+                            <div class="objective-list">
+                                <div class="objective-item">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <span>Conquistar título de Mestre</span>
+                                </div>
+                                <div class="objective-item">
+                                    <i class="fas fa-users"></i>
+                                    <span>Desenvolver liderança executiva</span>
+                                </div>
+                                <div class="objective-item">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <span>Tornar-se referência em inovação</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="investment-summary">
+            <h3 class="investment-title">💰 Investimento Estimado Total</h3>
+            <div class="investment-grid">
+                <div class="investment-item">
+                    <div class="investment-value">R$ 15-25k</div>
+                    <div class="investment-label">Certificações</div>
+                </div>
+                <div class="investment-item">
+                    <div class="investment-value">R$ 30-50k</div>
+                    <div class="investment-label">MBA/Especialização</div>
+                </div>
+                <div class="investment-item">
+                    <div class="investment-value">R$ 40-80k</div>
+                    <div class="investment-label">Mestrado</div>
+                </div>
+                <div class="investment-item">
+                    <div class="investment-value">R$ 10-20k</div>
+                    <div class="investment-label">Cursos/Workshops</div>
+                </div>
+                <div class="investment-item">
+                    <div class="investment-value">3-4 anos</div>
+                    <div class="investment-label">Tempo Total</div>
+                </div>
+                <div class="investment-item">
+                    <div class="investment-value">200%+</div>
+                    <div class="investment-label">ROI Esperado</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 30px; margin-top: 30px;">
+            <h3 style="color: #667eea; margin-bottom: 20px; text-align: center;">
+                <i class="fas fa-bullseye"></i> Resultado Esperado
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">🎯</div>
+                    <h4>CTO/Diretor de TI</h4>
+                    <p>Posição executiva em organizações ambientais ou tech</p>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">💡</div>
+                    <h4>Especialista Reconhecido</h4>
+                    <p>Referência em tecnologia para conservação</p>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">🌱</div>
+                    <h4>Impacto Social</h4>
+                    <p>Liderança em soluções tech sustentáveis</p>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 2em; margin-bottom: 10px;">📈</div>
+                    <h4>Crescimento Salarial</h4>
+                    <p>150-200% de aumento potencial</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
